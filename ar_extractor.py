@@ -1,3 +1,4 @@
+import os
 from datetime import timedelta, datetime
 import numpy as np
 import matplotlib.pyplot as plt
@@ -44,7 +45,57 @@ def load_map_304(date):
     a.Wavelength(304 * u.Angstrom)
     )
     result = Fido.search(*query)
-    mappath = Fido.fetch(result[0, -1])[0]
+    mappath = Fido.fetch(result[0, -1], path=f'./data/304/')[0]
+    return Map(mappath)
+
+def load_map_94(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(94 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/94/')[0]
+    return Map(mappath)
+
+def load_map_335(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(335 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/335/')[0]
+    return Map(mappath)
+
+def load_map_211(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(211 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/211/')[0]
+    return Map(mappath)
+
+def load_map_193(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(193 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/193/')[0]
+    return Map(mappath)
+
+def load_map_171(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(171 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/171/')[0]
     return Map(mappath)
 
 def load_map_131(date):
@@ -54,7 +105,37 @@ def load_map_131(date):
     a.Wavelength(131 * u.Angstrom)
     )
     result = Fido.search(*query)
-    mappath = Fido.fetch(result[0, -1])[0]
+    mappath = Fido.fetch(result[0, -1], path=f'./data/131/')[0]
+    return Map(mappath)
+
+def load_map_1700(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(1700 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/1700/')[0]
+    return Map(mappath)
+
+def load_map_1600(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(1600 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/1600/')[0]
+    return Map(mappath)
+
+def load_map_4500(date):
+    query = (
+    a.Time( date, date + timedelta(minutes=45), date), 
+    a.Instrument('AIA'),
+    a.Wavelength(4500 * u.Angstrom)
+    )
+    result = Fido.search(*query)
+    mappath = Fido.fetch(result[0, -1], path=f'./data/4500/')[0]
     return Map(mappath)
 
 def plot_map_with_ARs(smap):
@@ -126,13 +207,22 @@ for max_date in max_dates_swpc:
     try:
         smap_131 = load_map_131(max_date)
         smap_304 = load_map_304(max_date)
+        smap_94 = load_map_94(max_date)
+        smap_335 = load_map_335(max_date)
+        smap_211 = load_map_211(max_date)
+        smap_193 = load_map_193(max_date)
+        smap_171 = load_map_171(max_date)
+        smap_1600 = load_map_1600(max_date)
+        smap_1700 = load_map_1700(max_date)
+        smap_4500 = load_map_4500(max_date)
+
         srs_table, retreived_date = load_srs_table(start_time)
 
         lats = srs_table['Latitude']
         lngs = srs_table['Longitude']
         numbers = srs_table['Number']
 
-        plot_map_with_ARs(smap_131)
+        # plot_map_with_ARs(smap_131)
     except IndexError as e:
         print(f'No hay datos para esta fecha: {max_date}')
         continue
@@ -145,10 +235,12 @@ for max_date in max_dates_swpc:
         ar_set.add(ar_id)
         if prev_size == len(ar_set):
             continue
+        
         p1 = ar["hpc_boundcc"][9:-2]
         p2 = p1.split(',')
         p3 = [v.split(" ") for v in p2]
         p4 = [(float(v[0]),float(v[1])) for v in p3]
+        
         x_max = max([x for x,y in p4])
         x_min = min([x for x,y in p4])
         y_max = max([y for x,y in p4])
@@ -160,9 +252,38 @@ for max_date in max_dates_swpc:
         #pp1 = list((ar_center_x + np.abs(0.5*x_range), ar_center_y + np.abs(0.5*y_range))) # upper right corner
         bottom_left = SkyCoord( (ar_center_x - np.abs(0.5*x_range)) * u.arcsec, (ar_center_y - np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
         top_right = SkyCoord( (ar_center_x + np.abs(0.5*x_range)) * u.arcsec, (ar_center_y + np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
-        submap = smap_131.submap(bottom_left, top_right=top_right)
+        
+        
+        submap_131 = smap_131.submap(bottom_left, top_right=top_right)
+        submap_304 = smap_131.submap(bottom_left, top_right=top_right)
+        submap_94 = smap_94.submap(bottom_left, top_right=top_right)
+        submap_171 = smap_171.submap(bottom_left, top_right=top_right)
+        # submap_211 = smap_211.submap(bottom_left, top_right=top_right)
+        # submap_193 = smap_193.submap(bottom_left, top_right=top_right)
+        # submap_335 = smap_335.submap(bottom_left, top_right=top_right)
+        # submap_1600 = smap_1600.submap(bottom_left, top_right=top_right)
+        # submap_1700 = smap_1700.submap(bottom_left, top_right=top_right)
+        # submap_4500 = smap_4500.submap(bottom_left, top_right=top_right)
+
         e_start = str(ar['event_starttime'])
         e_start = e_start.replace(' ', '_').replace(':', '_').replace('.', '_')
-        wavelength = submap.meta['wave_str']
-        break
-    break
+        wavelength_131 = submap_131.meta['wave_str']
+        wavelength_304 = submap_304.meta['wave_str']
+        wavelength_171 = submap_171.meta['wave_str']
+        wavelength_94 = submap_94.meta['wave_str']
+        # wavelength_193 = submap_193.meta['wave_str']
+        # wavelength_211 = submap_211.meta['wave_str']
+        # wavelength_335 = submap_335.meta['wave_str']
+        # wavelength_1600 = submap_1600.meta['wave_str']
+        # wavelength_1700 = submap_1700.meta['wave_str']
+        # wavelength_4500 = submap_4500.meta['wave_str']
+
+        submap_131.save(f'./{e_start}_AR{ar_id}_{wavelength_131}.fits', overwrite=True)
+        submap_304.save(f'./{e_start}_AR{ar_id}_{wavelength_304}.fits', overwrite=True)
+        submap_171.save(f'./{e_start}_AR{ar_id}_{wavelength_171}.fits', overwrite=True)
+        submap_94.save(f'./{e_start}_AR{ar_id}_{wavelength_94}.fits', overwrite=True)
+
+
+
+        # break
+    # break
