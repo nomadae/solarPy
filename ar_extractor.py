@@ -227,61 +227,61 @@ for max_date in max_dates_swpc:
         print(f'No hay datos para esta fecha: {max_date}')
         continue
     
-    for i, response in enumerate(responses):
-        response_index = i
-        ar = responses[response_index]
-        prev_size = len(ar_set)
-        ar_id = int(ar['frm_specificid'].split('_')[-1])
-        ar_set.add(ar_id)
-        if prev_size == len(ar_set):
-            continue
+    # for i, response in enumerate(responses):
+    #     response_index = i
+    #     ar = responses[response_index]
+    #     prev_size = len(ar_set)
+    #     ar_id = int(ar['frm_specificid'].split('_')[-1])
+    #     ar_set.add(ar_id)
+    #     if prev_size == len(ar_set):
+    #         continue
         
-        p1 = ar["hpc_boundcc"][9:-2]
-        p2 = p1.split(',')
-        p3 = [v.split(" ") for v in p2]
-        p4 = [(float(v[0]),float(v[1])) for v in p3]
+    #     p1 = ar["hpc_boundcc"][9:-2]
+    #     p2 = p1.split(',')
+    #     p3 = [v.split(" ") for v in p2]
+    #     p4 = [(float(v[0]),float(v[1])) for v in p3]
         
-        x_max = max([x for x,y in p4])
-        x_min = min([x for x,y in p4])
-        y_max = max([y for x,y in p4])
-        y_min = min([y for x,y in p4])
-        ar_center_x, ar_center_y = ar['event_coord1'], ar['event_coord2']
-        x_range = x_max - x_min
-        y_range = y_max - y_min
+    #     x_max = max([x for x,y in p4])
+    #     x_min = min([x for x,y in p4])
+    #     y_max = max([y for x,y in p4])
+    #     y_min = min([y for x,y in p4])
+    #     ar_center_x, ar_center_y = ar['event_coord1'], ar['event_coord2']
+    #     x_range = x_max - x_min
+    #     y_range = y_max - y_min
 
-        #pp1 = list((ar_center_x + np.abs(0.5*x_range), ar_center_y + np.abs(0.5*y_range))) # upper right corner
-        bottom_left = SkyCoord( (ar_center_x - np.abs(0.5*x_range)) * u.arcsec, (ar_center_y - np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
-        top_right = SkyCoord( (ar_center_x + np.abs(0.5*x_range)) * u.arcsec, (ar_center_y + np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
+    #     #pp1 = list((ar_center_x + np.abs(0.5*x_range), ar_center_y + np.abs(0.5*y_range))) # upper right corner
+    #     bottom_left = SkyCoord( (ar_center_x - np.abs(0.5*x_range)) * u.arcsec, (ar_center_y - np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
+    #     top_right = SkyCoord( (ar_center_x + np.abs(0.5*x_range)) * u.arcsec, (ar_center_y + np.abs(0.5*y_range)) * u.arcsec, frame=smap_131.coordinate_frame)
         
         
-        submap_131 = smap_131.submap(bottom_left, top_right=top_right)
-        submap_304 = smap_131.submap(bottom_left, top_right=top_right)
-        submap_94 = smap_94.submap(bottom_left, top_right=top_right)
-        submap_171 = smap_171.submap(bottom_left, top_right=top_right)
-        # submap_211 = smap_211.submap(bottom_left, top_right=top_right)
-        # submap_193 = smap_193.submap(bottom_left, top_right=top_right)
-        # submap_335 = smap_335.submap(bottom_left, top_right=top_right)
-        # submap_1600 = smap_1600.submap(bottom_left, top_right=top_right)
-        # submap_1700 = smap_1700.submap(bottom_left, top_right=top_right)
-        # submap_4500 = smap_4500.submap(bottom_left, top_right=top_right)
+    #     submap_131 = smap_131.submap(bottom_left, top_right=top_right)
+    #     submap_304 = smap_131.submap(bottom_left, top_right=top_right)
+    #     submap_94 = smap_94.submap(bottom_left, top_right=top_right)
+    #     submap_171 = smap_171.submap(bottom_left, top_right=top_right)
+    #     # submap_211 = smap_211.submap(bottom_left, top_right=top_right)
+    #     # submap_193 = smap_193.submap(bottom_left, top_right=top_right)
+    #     # submap_335 = smap_335.submap(bottom_left, top_right=top_right)
+    #     # submap_1600 = smap_1600.submap(bottom_left, top_right=top_right)
+    #     # submap_1700 = smap_1700.submap(bottom_left, top_right=top_right)
+    #     # submap_4500 = smap_4500.submap(bottom_left, top_right=top_right)
 
-        e_start = str(ar['event_starttime'])
-        e_start = e_start.replace(' ', '_').replace(':', '_').replace('.', '_')
-        wavelength_131 = submap_131.meta['wave_str']
-        wavelength_304 = submap_304.meta['wave_str']
-        wavelength_171 = submap_171.meta['wave_str']
-        wavelength_94 = submap_94.meta['wave_str']
-        # wavelength_193 = submap_193.meta['wave_str']
-        # wavelength_211 = submap_211.meta['wave_str']
-        # wavelength_335 = submap_335.meta['wave_str']
-        # wavelength_1600 = submap_1600.meta['wave_str']
-        # wavelength_1700 = submap_1700.meta['wave_str']
-        # wavelength_4500 = submap_4500.meta['wave_str']
+    #     e_start = str(ar['event_starttime'])
+    #     e_start = e_start.replace(' ', '_').replace(':', '_').replace('.', '_')
+    #     wavelength_131 = submap_131.meta['wave_str']
+    #     wavelength_304 = submap_304.meta['wave_str']
+    #     wavelength_171 = submap_171.meta['wave_str']
+    #     wavelength_94 = submap_94.meta['wave_str']
+    #     # wavelength_193 = submap_193.meta['wave_str']
+    #     # wavelength_211 = submap_211.meta['wave_str']
+    #     # wavelength_335 = submap_335.meta['wave_str']
+    #     # wavelength_1600 = submap_1600.meta['wave_str']
+    #     # wavelength_1700 = submap_1700.meta['wave_str']
+    #     # wavelength_4500 = submap_4500.meta['wave_str']
 
-        submap_131.save(f'./{e_start}_AR{ar_id}_{wavelength_131}.fits', overwrite=True)
-        submap_304.save(f'./{e_start}_AR{ar_id}_{wavelength_304}.fits', overwrite=True)
-        submap_171.save(f'./{e_start}_AR{ar_id}_{wavelength_171}.fits', overwrite=True)
-        submap_94.save(f'./{e_start}_AR{ar_id}_{wavelength_94}.fits', overwrite=True)
+    #     submap_131.save(f'./{e_start}_AR{ar_id}_{wavelength_131}.fits', overwrite=True)
+    #     submap_304.save(f'./{e_start}_AR{ar_id}_{wavelength_304}.fits', overwrite=True)
+    #     submap_171.save(f'./{e_start}_AR{ar_id}_{wavelength_171}.fits', overwrite=True)
+    #     submap_94.save(f'./{e_start}_AR{ar_id}_{wavelength_94}.fits', overwrite=True)
 
 
 
